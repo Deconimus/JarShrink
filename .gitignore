@@ -1,0 +1,6 @@
+*.class
+screens/
+bin/
+lib/
+*.jar
+tmp/
