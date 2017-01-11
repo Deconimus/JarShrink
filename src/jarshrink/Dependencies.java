@@ -69,7 +69,7 @@ public class Dependencies {
 				for (int i = ind+3, len = line.length(); i < len; i++) {
 					char c = line.charAt(i);
 					
-					if (c != ' ' && c != '\t') {
+					if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
 						
 						if (start < 0) { start = i; }
 						
