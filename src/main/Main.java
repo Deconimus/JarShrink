@@ -21,6 +21,14 @@ public class Main {
 	
 	public static String jar, out;
 	
+	public static boolean printStatus, printDependencyList;
+	
+	static {
+		
+		printStatus = false;
+		printDependencyList = true;
+	}
+	
 	
 	public static void main(String[] args) {
 		
@@ -42,28 +50,45 @@ public class Main {
 		if (unpacked.exists()) { Files.deleteDir(unpacked); }
 		if (!unpacked.mkdir()) { unpacked.mkdirs(); }
 		
+		String mainClass = Jars.getMainClass(jarFile);
+		
+		if (mainClass == null || mainClass.trim().isEmpty()) { System.out.println("No Main-Class found."); return; }
+		
+		if (printStatus) System.out.println("Unpacking .jar");
+		
 		Jars.extract(jarFile, unpacked);
 		
-		String mainClass = Jars.getMainClass(unpacked);
-		
-		//String mainPackage = Jars.getMainPackage(unpacked);
-		//File mainPackageDir = new File(unpacked.getAbsolutePath().replace("\\", "/")+"/"+mainPackage);
+		if (printStatus) System.out.println("Analyzing dependencies");
 		
 		Map<String, String[]> dependencyMap = Dependencies.buildDependencyMap(unpacked);
 		
+		if (printStatus) System.out.println("Constructing dependency-tree");
+		
 		Set<String> classTree = ClassTreeBuilder.getClassTree(mainClass, dependencyMap);
 		
-		System.out.println("Dependencies:\n");
+		if (printDependencyList) {
 		
-		for (String s : classTree) {
+			System.out.println("\nDependencies:\n");
 			
-			System.out.println(s);
+			for (String s : classTree) {
+				
+				System.out.println(s);
+			}
+			System.out.println();
 		}
+		
+		if (printStatus) System.out.println("Scraping redundant classes");
 		
 		Dependencies.removeRedundantClasses(unpacked, classTree);
 		Files.deleteEmptyDirs(unpacked);
 		
+		if (printStatus) System.out.println("Building new .jar");
+		
 		Jars.create(unpacked, new File(out));
+		
+		Files.deleteDir(unpacked);
+		
+		if (printStatus) System.out.println("Done");
 	}
 	
 	
@@ -81,13 +106,22 @@ public class Main {
 			String nextArg = (i < args.length-1) ? cleanArg(args[i+1]) : null;
 			if (nextArg != null && nextArg.startsWith("-")) { nextArg = null; }
 			
-			if (nextArg != null) {
+			if (arg.equals("-s") || arg.equals("-status")) {
+				
+				printStatus = true;
+				
+			} else if (arg.equals("-n") || arg.equals("-nolist")) {
+				
+				printDependencyList = false;
+				
+			} else if (nextArg != null) {
 			
 				if (arg.equals("-out") || arg.equals("-o")) {
 					
 					out = nextArg;
 					i++;
 				}
+				
 			}
 		}
 		
