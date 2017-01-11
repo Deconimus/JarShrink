@@ -6,6 +6,18 @@ Shrinks .jar files by removing redundant class-files.
 Looking for a way to statically link libraries in Java as you would do in C/C++, I was surprised to find no proper way. <br>
 So the next best thing that came to mind was to look for tools that would at least remove unused classes from a jar. Amazed by how slowly ProGuard does it's job, I wrote this clean simple tool.
 
+## How it works
+
+A basic summary of JarShrink's procedure:
+
+ - Extract the jar's contents into a temporary directory.
+ - Use `jdeps` to generate a dependency-map of all classes inside the jar.
+ - Search for a Main-Class specified in the MANIFEST.MF file.
+ - Construct a Dependency-Tree with the Main-Class and/or the specified classes/packages to keep as it's root.
+ - Remove all class-files from the temporary directory that aren't in Dependency-Tree and scrap folders that are now empty.
+ - Build a new jar from the remaining contents of the temporary directory.
+
+
 ## Commandline Interface
 
 ### Grammar
@@ -29,7 +41,7 @@ So the next best thing that came to mind was to look for tools that would at lea
     
 ## API
 
-JarShrink's functionality is encapsulated in the class <b>JarShrinker</b> for API use.
+JarShrink's functionality is encapsulated in the class `JarShrinker` for API use.
 
 ### Examples
 
