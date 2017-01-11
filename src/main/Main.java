@@ -163,7 +163,11 @@ public class Main {
 		
 		File home = new File(System.getProperty("java.home"));
 		
-		if (!home.getName().startsWith("jdk")) {
+		if (home.getName().equals("jre") && home.getParentFile().getName().startsWith("jdk")) {
+			
+			home = home.getParentFile();
+			
+		} else if (!home.getName().startsWith("jdk")) {
 			
 			File d = home.getParentFile();
 			
