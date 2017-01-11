@@ -1,10 +1,12 @@
-package main;
+package jarshrink;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
@@ -13,13 +15,17 @@ import visionCore.util.Files;
 import visionCore.util.Jars;
 import visionCore.util.Zipper;
 
+/**
+ * JarShrink's Main class.
+ * @author Deconimus
+ */
 public class Main {
 	
 	
 	public static String abspath, javaHome;
 	
 	
-	public static String jar, out;
+	public static String jar, out, keep[];
 	
 	public static boolean printStatus, printDependencyList;
 	
@@ -46,58 +52,22 @@ public class Main {
 		File jarFile = new File(jar);
 		if (!jarFile.exists()) { System.out.println("Jar not found."); return; }
 		
-		File unpacked = new File(abspath+"/tmp");
-		if (unpacked.exists()) { Files.deleteDir(unpacked); }
-		if (!unpacked.mkdir()) { unpacked.mkdirs(); }
+		JarShrinker shrinker = new JarShrinker(new File(abspath));
+		shrinker.setPrintStatus(printStatus);
+		shrinker.setPrintDependencyList(printDependencyList);
 		
-		String mainClass = Jars.getMainClass(jarFile);
+		shrinker.shrink(jarFile, new File(out), keep);
 		
-		if (mainClass == null || mainClass.trim().isEmpty()) { System.out.println("No Main-Class found."); return; }
-		
-		if (printStatus) System.out.println("Unpacking .jar");
-		
-		Jars.extract(jarFile, unpacked);
-		
-		if (printStatus) System.out.println("Analyzing dependencies");
-		
-		Map<String, String[]> dependencyMap = Dependencies.buildDependencyMap(unpacked);
-		
-		if (printStatus) System.out.println("Constructing dependency-tree");
-		
-		Set<String> classTree = ClassTreeBuilder.getClassTree(mainClass, dependencyMap);
-		
-		if (printDependencyList) {
-		
-			System.out.println("\nDependencies:\n");
-			
-			for (String s : classTree) {
-				
-				System.out.println(s);
-			}
-			System.out.println();
-		}
-		
-		if (printStatus) System.out.println("Scraping redundant classes");
-		
-		Dependencies.removeRedundantClasses(unpacked, classTree);
-		Files.deleteEmptyDirs(unpacked);
-		
-		if (printStatus) System.out.println("Building new .jar");
-		
-		Jars.create(unpacked, new File(out));
-		
-		Files.deleteDir(unpacked);
-		
-		if (printStatus) System.out.println("Done");
 	}
 	
 	
 	private static void parseArgs(String[] args) {
 		
-		if (args.length > 0) {
+		if (args.length <= 0) { return; }
 			
-			jar = cleanArg(args[0]);
-		}
+		jar = cleanArg(args[0]);
+		
+		List<String> keep = new ArrayList<String>();
 		
 		for (int i = 1; i < args.length; i++) {
 			
@@ -116,9 +86,17 @@ public class Main {
 				
 			} else if (nextArg != null) {
 			
-				if (arg.equals("-out") || arg.equals("-o")) {
+				if (arg.equals("-o") || arg.equals("-out")) {
 					
 					out = nextArg;
+					i++;
+					
+				} else if (arg.equals("-k") || arg.equals("-keep")) {
+					
+					while (nextArg.endsWith("*")) { nextArg = nextArg.substring(0, nextArg.length()-1); }
+					while (nextArg.endsWith("..")) { nextArg = nextArg.substring(0, nextArg.length()-1); }
+					
+					keep.add(nextArg);
 					i++;
 				}
 				
@@ -129,6 +107,8 @@ public class Main {
 			
 			out = jar.substring(0, Math.max(0, jar.lastIndexOf('.')))+"_shrunken.jar";
 		}
+		
+		Main.keep = keep.toArray(new String[keep.size()]);
 	}
 	
 	private static String cleanArg(String arg) {

@@ -1,4 +1,4 @@
-package main;
+package jarshrink;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,9 +12,16 @@ import java.util.Set;
 import visionCore.util.Lists;
 import visionCore.util.Zipper;
 
+/**
+ * @author Deconimus
+ */
 public class Dependencies {
 	
 	
+	/**
+	 * Gathers information on dependencies of all present classes in the specified jar.
+	 * @author Deconimus
+	 */
 	public static Map<String, String[]> buildDependencyMap(File jar) {
 		
 		List<String> lines = new ArrayList<String>(32);
@@ -86,15 +93,17 @@ public class Dependencies {
 	
 	public static void removeRedundantClasses(File dir, Set<String> dependencies) {
 		
-		List<File> fl = Lists.asArrayList(dir.listFiles());
+		removeRedundantClasses(dir, dir, dependencies);
+	}
+	
+	public static void removeRedundantClasses(File dir, File root, Set<String> dependencies) {
 		
-		for (int i = 0; i < fl.size(); i++) {
-			File f = fl.get(i);
+		for (File f : dir.listFiles()) {
 			
-			if (f.getName().toLowerCase().endsWith(".class")) {
+			if (!f.isDirectory() && f.getName().toLowerCase().endsWith(".class")) {
 				
-				String className = f.getAbsolutePath().substring(dir.getAbsolutePath().length()+1).replace('\\', '/').replace('/', '.');
-				className = className.substring(0, className.lastIndexOf('.'));
+				String className = f.getAbsolutePath().substring(root.getAbsolutePath().length()+1).replace('\\', '/').replace('/', '.');
+				className = className.substring(0, className.lastIndexOf('.')).trim();
 				
 				if (!dependencies.contains(className)) {
 					
@@ -103,7 +112,8 @@ public class Dependencies {
 				
 			} else if (f.isDirectory()) {
 				
-				Lists.addAll(fl, i+1, f.listFiles());
+				removeRedundantClasses(f, root, dependencies);
+				if (f.list().length <= 0) { f.delete(); }
 			}
 		}
 	}

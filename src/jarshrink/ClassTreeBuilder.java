@@ -1,4 +1,4 @@
-package main;
+package jarshrink;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,10 +9,17 @@ import java.util.Set;
 
 import visionCore.util.Lists;
 
+/**
+ * Builds the class-dependcy-tree
+ * @author Deconimus
+ */
 public class ClassTreeBuilder {
 	
-	
-	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap) {
+	/**
+	 * Builds the class-dependcy-tree
+	 * @author Deconimus
+	 */
+	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep) {
 		
 		Set<String> classTree = new HashSet<String>();
 		List<String> newlyAdded = new ArrayList<String>();
@@ -20,20 +27,22 @@ public class ClassTreeBuilder {
 		classTree.add(mainClass);
 		newlyAdded.add(mainClass);
 		
-		/*
-		for (File cl : mainPackageDir.listFiles()) {
-			
-			String n = cl.getName();
-			
-			if (n.toLowerCase().endsWith(".class")) {
+		if (keep != null && keep.length > 0) {
+		
+			for (String cl : dependencyMap.keySet()) {
 				
-				String cn = mainPackage+"."+n.substring(0, n.lastIndexOf('.'));
-				
-				classTree.add(cn);
-				newlyAdded.add(cn);
+				for (String k : keep) {
+					
+					if (cl.startsWith(k)) {
+						
+						classTree.add(cl);
+						newlyAdded.add(cl);
+						
+						break;
+					}
+				}
 			}
 		}
-		*/
 		
 		List<String> buffer = new ArrayList<String>();
 		
