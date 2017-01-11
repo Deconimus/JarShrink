@@ -24,8 +24,11 @@ public class ClassTreeBuilder {
 		Set<String> classTree = new HashSet<String>();
 		List<String> newlyAdded = new ArrayList<String>();
 		
-		classTree.add(mainClass);
-		newlyAdded.add(mainClass);
+		if (mainClass != null) {
+		
+			classTree.add(mainClass);
+			newlyAdded.add(mainClass);
+		}
 		
 		if (keep != null && keep.length > 0) {
 		

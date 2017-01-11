@@ -71,7 +71,11 @@ public class JarShrinker {
 		
 		String mainClass = Jars.getMainClass(jarFile);
 		
-		if (mainClass == null || mainClass.trim().isEmpty()) { System.out.println("No Main-Class found."); return; }
+		if ((mainClass == null || mainClass.trim().isEmpty()) && (keep == null || keep.length <= 0)) { 
+			
+			System.out.println("No Main-Class found and no packages to keep.");
+			return;
+		}
 		
 		if (printStatus) System.out.println("Unpacking .jar");
 		
