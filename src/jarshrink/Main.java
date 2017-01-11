@@ -38,6 +38,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		if (args.length > 0 && args[0].trim().equals("-h") || args[0].trim().endsWith("-help")) { help(); return; }
+		
 		setAbspath();
 		setJavaHome();
 		
@@ -45,7 +47,7 @@ public class Main {
 		
 		if (jar == null) {
 			
-			System.out.println("Jar not specified.");
+			System.out.println("Jar not specified. Run \"-help\" for more information.");
 			return;
 		}
 		
@@ -117,6 +119,26 @@ public class Main {
 		if (arg.startsWith("\"") && arg.endsWith("\"")) { arg = arg.substring(1, arg.length()-1).trim(); }
 		
 		return arg;
+	}
+	
+	
+	private static void help() {
+		
+		System.out.println("\nJarShrink by Deconimus\n");
+		
+		System.out.println("Grammar:\n");
+		System.out.println("\tjarShrink <jarFile> [<argumentName> <argumentValue>]");
+		
+		System.out.println("\nArguments:\n");
+		
+		System.out.println("\t-o | -out\tSpecifies the output-file for the newly created jar.");
+		System.out.println("\t-k | -keep\tSpecifies a package or class that will be retained together with it's");
+		System.out.println("\t\t\tdependencies. Can be called multiple times.");
+		System.out.println("\t-s | -status\tPrint status information.");
+		System.out.println("\t-n | -nolist\tDon't print the dependency list.");
+		
+		System.out.println();
+		
 	}
 	
 	

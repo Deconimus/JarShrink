@@ -22,13 +22,13 @@ public class Dependencies {
 	 * Gathers information on dependencies of all present classes in the specified jar.
 	 * @author Deconimus
 	 */
-	public static Map<String, String[]> buildDependencyMap(File jar) {
+	public static Map<String, String[]> buildDependencyMap(String jdeps, File jar) {
 		
 		List<String> lines = new ArrayList<String>(32);
 		
 		try {
 		
-			ProcessBuilder pb = new ProcessBuilder(Main.javaHome+"/bin/jdeps", "-verbose:class", "-filter:none", "\""+jar.getAbsolutePath()+"\"");
+			ProcessBuilder pb = new ProcessBuilder(jdeps, "-verbose:class", "-filter:none", "\""+jar.getAbsolutePath()+"\"");
 			Process p = pb.start();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));

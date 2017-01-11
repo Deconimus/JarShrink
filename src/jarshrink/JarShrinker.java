@@ -79,7 +79,7 @@ public class JarShrinker {
 		
 		if (printStatus) System.out.println("Analyzing dependencies");
 		
-		Map<String, String[]> dependencyMap = Dependencies.buildDependencyMap(unpacked);
+		Map<String, String[]> dependencyMap = Dependencies.buildDependencyMap(jdepsLocation, unpacked);
 		
 		if (printStatus) System.out.println("Constructing dependency-tree");
 		
