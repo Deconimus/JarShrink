@@ -2,6 +2,7 @@ package visionCore.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
@@ -102,26 +103,28 @@ public class Jars {
 				Zipper.addEntry(zout, "META-INF/MANIFEST.MF", manifest, buffer);
 			}
 			
-			List<File> fl = Lists.asArrayList(in.listFiles());
-			
-			for (int i = 0; i < fl.size(); i++) {
-				File f = fl.get(i);
-				
-				if (f == manifest || f.equals(manifest)) { continue; }
-				
-				Zipper.addEntry(zout, f, in, buffer);
-				
-				if (f.isDirectory()) {
-					
-					Lists.addAll(fl, i+1, f.listFiles());
-				}
-			}
+			addEntries(zout, in, in, manifest, buffer);
 			
 			zout.flush();
 			zout.close();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 		
+	}
+	
+	private static void addEntries(ZipOutputStream zout, File dir, File root, File manifest, byte[] buffer) throws IOException {
+		
+		for (File f : dir.listFiles()) {
+			
+			if (f == manifest || f.equals(manifest)) { continue; }
+			
+			Zipper.addEntry(zout, f, root, buffer);
+			
+			if (f.isDirectory()) {
+				
+				addEntries(zout, f, root, manifest, buffer);
+			}
+		}
 	}
 	
 	
