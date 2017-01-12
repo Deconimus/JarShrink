@@ -1,5 +1,5 @@
 # JarShrink
-Shrinks .jar files by removing redundant class-files.
+Shrinks JARs by removing redundant class-files.
 
 ## Motivation
 
