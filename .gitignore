@@ -1,6 +1,6 @@
 *.class
 screens/
 bin/
-lib/
-*.jar
+jarShrink.jar
+jarShrunken.jar
 tmp/
