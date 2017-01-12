@@ -75,7 +75,7 @@ A basic summary of JarShrink's procedure:
 ## Compatibility with known libraries
 
 Below is a table of known libraries and how well JarShrink does with them.<br>
-Note that any library will work if imported as a jar file.
+_Note that any library will work if imported as a jar file._
 
 Library | Compatibility | Extra arguments (if needed)
 --------|---------------|----------------------------
