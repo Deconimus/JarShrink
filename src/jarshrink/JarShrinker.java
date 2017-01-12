@@ -14,6 +14,9 @@ import visionCore.util.Jars;
 public class JarShrinker {
 	
 	
+	private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+	
+	
 	private File tmpdir;
 	
 	private String jdepsLocation;
@@ -181,6 +184,6 @@ public class JarShrinker {
 			}
 		}
 		
-		return home.getAbsolutePath().replace("\\", "/")+"/bin/jdeps";
+		return home.getAbsolutePath().replace("\\", "/")+"/bin/jdeps" + ((isWindows) ? ".exe" : "");
 	}
 }

@@ -20,8 +20,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.itadaki.bzip2.BZip2InputStream;
-import org.itadaki.bzip2.BZip2OutputStream;
 
 public class Zipper {
 
@@ -293,84 +291,5 @@ public class Zipper {
 		zout.closeEntry();
 	}
 	
-	
-	public static void bzip2(String dir, String target) {
-		bzip2(new File(dir), new File(target));
-	}
-	
-	/**
-	 * Compresses a file using the bzip2 algorithm and writes it to the given output file.
-	 * @param input The input file.
-	 * @param output The output file
-	 */
-	public static void bzip2(File input, File output) {
-		
-		try {
-			
-			BZip2OutputStream bzos = new BZip2OutputStream(new FileOutputStream(output));
-			byte[] buffer = new byte[1024];
-			
-			if (input.isDirectory()) {
-				
-				List<File> files = Files.getFilesRecursive(input.getAbsolutePath());
-				
-				for (File file : files) {
-					
-					FileInputStream in = new FileInputStream(file);
-					
-					for (int len; (len = in.read(buffer)) > 0;) {
-						
-						bzos.write(buffer, 0, len);
-					}
-				}
-				
-			} else {
-				
-				ZipEntry ze = new ZipEntry(input.getName());
-				
-				FileInputStream in = new FileInputStream(input);
-				
-				for (int len; (len = in.read(buffer)) > 0;) {
-					
-					bzos.write(buffer, 0, len);
-					
-				}
-				
-			}
-			
-			bzos.flush();
-			bzos.close();
-			
-		} catch (Exception e) { e.printStackTrace(); }
-		
-	}
-	
-	public static InputStream getBzip2Stream(File input) {
-		
-		try {
-			
-			BZip2InputStream bzin = new BZip2InputStream(new FileInputStream(input), false);
-			return bzin;
-			
-		} catch (Exception e) { e.printStackTrace(); }
-		
-		return null;
-	}
-	
-	public static OutputStream getBzip2OutStream(File file) {
-		
-		try { return new BZip2OutputStream(new FileOutputStream(file)); } 
-		catch (IOException e) { e.printStackTrace(); }
-		
-		return null;
-	}
-	
-	public static OutputStream getBzip2OutStream(OutputStream out) {
-		
-		try { return new BZip2OutputStream(out); } 
-		catch (IOException e) { e.printStackTrace(); }
-		
-		return null;
-	}
 	
 }
