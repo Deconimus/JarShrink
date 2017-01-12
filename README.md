@@ -28,14 +28,12 @@ There are pre-built JARs in the [release-section](https://github.com/Deconimus/J
      
 ### Arguments
 
-    -o | -out       Specifies the output-file for the newly created jar.
-    
-    -k | -keep      Specifies a package or class that will be retained together with it's dependencies. 
-                    Can be called multiple times.
-                    
-    -s | -status    Print status information while processing.
-    
-    -n | -nolist    Don't print a list of the remaining dependencies.
+Argument          | Value | Effect
+----------------- | ----- | ------
+`-o` or `-out`    | directory | Specifies the output-file for the newly created jar.
+`-k` or `-keep`   | package or class | Specifies a package or class that will be retained together with it's dependencies.<br>Can be called multiple times.
+`-s` or `-status` | | Print status information while processing.
+`-n` or `-nolist` | | Don't print a list of the remaining dependencies.
     
 ### Example
 
@@ -75,16 +73,17 @@ A basic summary of JarShrink's procedure:
 ## Compatibility with known libraries
 
 Below is a table of known libraries and how well JarShrink does with them.<br>
-_Note that any library will work if imported as a jar file._
+_Note that any library will still work if imported as a jar file._
 
 Library | Compatibility | Extra arguments (if needed)
---------|---------------|----------------------------
+--------|:-------------:|----------------------------
 LWJGL | ✓ | 
-JInput | (✓) | -keep net.java.games.input
+JInput | (✓) | `-keep net.java.games.input`
 Guava | ✓ | 
 Dom4j | ✓ | 
 Slick2D | ✓ | 
 jbzip2 | ✓ | 
+HTMLUnit | X | 
 
 
 ## A few notes
