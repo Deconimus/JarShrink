@@ -11,7 +11,7 @@ So the next best thing that came to mind was to look for tools that would at lea
 You can either run JarShrink as a commandline tool or integrate it into your software by importing it and calling it's API.<br>
 Instructions on how to use these interfaces are found in the sections further below.
 
-If your software or software you're including makes use of Reflection, you will most likely need to tell JarShrink to keep certain packages or whole libaries in order to preserve their functionality. I've started compiling a table of common libaries with information on JarShrinks compatibility regarding them further below in this readme.
+If your software or software you're including makes use of Reflection, you will most likely need to tell JarShrink to keep certain packages or whole libaries in order to preserve their functionality. I've started compiling a table of known libaries with information regarding their compatibility with JarShrink further below this readme.
 
 There are pre-built JARs in the [release-section](https://github.com/Deconimus/JarShrink/releases), so you won't necessarily have to build JarShrink yourself.
 
