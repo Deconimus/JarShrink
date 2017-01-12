@@ -38,7 +38,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		if (args.length > 0 && args[0].trim().equals("-h") || args[0].trim().endsWith("-help")) { help(); return; }
+		if (args.length == 0 || (args[0].trim().equals("-h") || args[0].trim().endsWith("-help"))) { help(); return; }
 		
 		setAbspath();
 		setJavaHome();
