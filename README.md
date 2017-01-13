@@ -13,7 +13,8 @@ Instructions on how to use these interfaces are found in the sections further be
 
 If your software or software you're including makes use of Reflection, you will most likely need to tell JarShrink to keep certain packages or whole libaries in order to preserve their functionality. I've started compiling a table of known libaries with information regarding their compatibility with JarShrink further below this readme.
 
-There are pre-built JARs in the [release-section](https://github.com/Deconimus/JarShrink/releases), so you won't necessarily have to build JarShrink yourself. However there is also a python build-script.
+There are pre-built JARs in the [release-section](https://github.com/Deconimus/JarShrink/releases), so you won't necessarily have to build JarShrink yourself.<br>
+However there is also a python build-script.
 
 ## Prequisites
 
