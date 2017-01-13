@@ -27,10 +27,10 @@ def build():
 	for f in copyFiles:
 		shutil.copy(path+"/"+f, tmp+"/"+f)
 	
-	srcListString = sourceListString(getSourceFiles(srcFilePath))
+	srcList = sourceListString(getSourceFiles(srcFilePath))
 	
 	os.chdir(path)
-	os.system("javac "+srcListString+" -sourcepath \""+srcFilePath+"/\" -d \""+tmp+"/\"")
+	os.system("javac "+srcList+" -sourcepath \""+srcFilePath+"/\" -d \""+tmp+"/\"")
 	
 	with open(path+"/MANIFEST.MF", "w+") as f:
 		
@@ -55,7 +55,7 @@ def getSourceFiles(directory):
 			
 			if (f.lower().endswith(".java")):
 			
-				files.append(os.path.join(dirName, f)[len(path)+1:])
+				files.append(os.path.join(dirName, f))
 				
 	return files
 	
