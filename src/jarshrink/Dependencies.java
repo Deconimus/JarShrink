@@ -102,7 +102,7 @@ public class Dependencies {
 			
 			if (!f.isDirectory() && f.getName().toLowerCase().endsWith(".class")) {
 				
-				String className = f.getAbsolutePath().substring(root.getAbsolutePath().length()+1).replace('\\', '/').replace('/', '.');
+				String className = f.getAbsolutePath().substring(root.getAbsolutePath().length()+1).replace(File.separator, ".");
 				className = className.substring(0, className.lastIndexOf('.')).trim();
 				
 				if (!dependencies.contains(className)) {

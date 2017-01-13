@@ -18,6 +18,8 @@ tmp = path+"/tmp"
 
 def build():
 	
+	os.chdir(path)
+	
 	if os.path.exists(tmp):
 		
 		shutil.rmtree(tmp)
@@ -29,7 +31,6 @@ def build():
 	
 	srcList = sourceListString(getSourceFiles(srcFilePath))
 	
-	os.chdir(path)
 	os.system("javac "+srcList+" -sourcepath \""+srcFilePath+"/\" -d \""+tmp+"/\"")
 	
 	with open(path+"/MANIFEST.MF", "w+") as f:
@@ -52,10 +53,10 @@ def getSourceFiles(directory):
 	for dirName, subdirList, fileList in os.walk(directory):
 		
 		for f in fileList:
-			
 			if (f.lower().endswith(".java")):
-			
-				files.append(os.path.join(dirName, f))
+				
+				files.append(dirName.replace("\\", "/")[len(path)+1:])
+				break
 				
 	return files
 	
@@ -66,7 +67,7 @@ def sourceListString(sourceFiles):
 	
 	for f in sourceFiles:
 		
-		str = str + "\""+f+"\" "
+		str = str + "\""+f+"/\"*.java "
 		
 	return str.strip()
 	

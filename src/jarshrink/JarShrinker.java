@@ -26,7 +26,7 @@ public class JarShrinker {
 	
 	public JarShrinker() {
 		
-		this(new File(findAbspath()+"/tmp"));
+		this(new File(findAbspath()+File.separator+"tmp"));
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class JarShrinker {
 		String jarFileName = jarFile.getName();
 		int ind = jarFileName.lastIndexOf('.');
 		
-		File unpacked = new File(tmpdir.getAbsolutePath().replace('\\', '/')+"/"+jarFileName.substring(0, (ind == -1) ? jarFileName.length() : ind));
+		File unpacked = new File(tmpdir.getAbsolutePath()+File.separator+jarFileName.substring(0, (ind == -1) ? jarFileName.length() : ind));
 		if (unpacked.exists()) { Files.deleteDir(unpacked); }
 		if (!unpacked.mkdir()) { unpacked.mkdirs(); }
 		
@@ -136,11 +136,11 @@ public class JarShrinker {
 		
 		try {
 			
-			abspath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath().replace("\\", "/");
+			abspath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
 			
-			if (abspath.endsWith("/bin")) {
+			if (abspath.endsWith(File.separator+"bin")) {
 				
-				abspath = abspath.substring(0, abspath.indexOf("/bin"));
+				abspath = abspath.substring(0, abspath.indexOf(File.separator+"bin"));
 			}
 			
 			if (abspath.endsWith(".jar")) {
@@ -184,6 +184,6 @@ public class JarShrinker {
 			}
 		}
 		
-		return home.getAbsolutePath().replace("\\", "/")+"/bin/jdeps" + ((isWindows) ? ".exe" : "");
+		return home.getAbsolutePath()+File.separator+"bin"+File.separator+"jdeps" + ((isWindows) ? ".exe" : "");
 	}
 }

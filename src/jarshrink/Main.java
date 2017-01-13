@@ -115,7 +115,7 @@ public class Main {
 	
 	private static String cleanArg(String arg) {
 		
-		arg = arg.replace('\\', '/').trim();
+		arg = arg.trim();
 		if (arg.startsWith("\"") && arg.endsWith("\"")) { arg = arg.substring(1, arg.length()-1).trim(); }
 		
 		return arg;
@@ -146,11 +146,11 @@ public class Main {
 		
 		try {
 			
-			abspath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath().replace("\\", "/");
+			abspath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
 			
-			if (abspath.endsWith("/bin")) {
+			if (abspath.endsWith(File.separator+"bin")) {
 				
-				abspath = abspath.substring(0, abspath.indexOf("/bin"));
+				abspath = abspath.substring(0, abspath.indexOf(File.separator+"bin"));
 			}
 			
 			if (abspath.endsWith(".jar")) {
@@ -192,7 +192,7 @@ public class Main {
 			}
 		}
 		
-		javaHome = home.getAbsolutePath().replace("\\", "/");
+		javaHome = home.getAbsolutePath();
 	}
 	
 }
