@@ -24,6 +24,8 @@ public class ClassTreeBuilder {
 		Set<String> classTree = new HashSet<String>();
 		List<String> newlyAdded = new ArrayList<String>();
 		
+		boolean nullDeps = false;
+		
 		if (mainClass != null) {
 		
 			classTree.add(mainClass);
@@ -54,7 +56,18 @@ public class ClassTreeBuilder {
 			for (String cl : newlyAdded) {
 				
 				String[] deps = dependencyMap.get(cl);
-				if (deps == null) { System.out.println("]"+cl); continue; }
+				
+				if (deps == null) {
+					
+					if (!nullDeps) { 
+						
+						System.out.println("External Dependencies:\n"); 
+						nullDeps = true;
+					}
+					
+					System.out.println("]"+cl); 
+					continue;
+				}
 				
 				Lists.addAll(buffer, deps);
 			}
