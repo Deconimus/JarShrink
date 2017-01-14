@@ -15,6 +15,7 @@ public class JarShrinker {
 	
 	
 	private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+	private static final String ext = ((isWindows) ? ".exe" : "");
 	
 	
 	private File tmpdir;
@@ -157,11 +158,11 @@ public class JarShrinker {
 		
 		File home = new File(System.getProperty("java.home"));
 		
-		if (home.getName().equals("jre") && home.getParentFile().getName().startsWith("jdk")) {
+		if (home.getName().toLowerCase().equals("jre") && home.getParentFile().getName().toLowerCase().startsWith("jdk")) {
 			
 			home = home.getParentFile();
 			
-		} else if (!home.getName().startsWith("jdk")) {
+		} else if (!home.getName().toLowerCase().startsWith("jdk")) {
 			
 			File d = home.getParentFile();
 			
@@ -169,11 +170,16 @@ public class JarShrinker {
 			
 			for (File f : d.listFiles()) {
 				
-				if (f.isDirectory() && f.getName().startsWith("jdk")) {
+				if (f.isDirectory() && f.getName().toLowerCase().startsWith("jdk")) {
+					
+					if (!new File(f.getAbsolutePath()+File.separator+"bin"+File.separator+"jdeps"+ext).exists()) { continue; }
 					
 					long v = -1L;
-					try { v = (long)Double.parseDouble(f.getName().substring(3).replace(".", "").replace("_", "")); }
-					catch (Exception e) {}
+					
+					try {
+						v = (long)Double.parseDouble(f.getName().replace(" ", "").substring(3).replace(".", "")
+										.replace("x86", "").replace("x64", "").replace("u", "").replace("_", "")); 
+					} catch (Exception e) {}
 					
 					if (v > ver) {
 						
@@ -184,6 +190,6 @@ public class JarShrinker {
 			}
 		}
 		
-		return home.getAbsolutePath()+File.separator+"bin"+File.separator+"jdeps" + ((isWindows) ? ".exe" : "");
+		return home.getAbsolutePath()+File.separator+"bin"+File.separator+"jdeps"+ext;
 	}
 }
