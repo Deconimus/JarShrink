@@ -47,7 +47,7 @@ public class Dependencies {
 		
 		for (String line : lines) {
 			
-			if (line.contains(" java.")) { continue; }
+			if (line.contains(" java.") || line.contains(" javax.")) { continue; }
 			
 			int ind = line.indexOf("->");
 			int parInd = line.indexOf(" (");
