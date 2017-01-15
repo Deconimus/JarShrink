@@ -4,3 +4,4 @@ bin/
 jarShrink.jar
 jarShrunken.jar
 tmp/
+log.txt

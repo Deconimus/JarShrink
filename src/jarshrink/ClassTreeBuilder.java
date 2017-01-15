@@ -1,6 +1,6 @@
 package jarshrink;
 
-import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,12 +14,21 @@ import visionCore.util.Lists;
  * @author Deconimus
  */
 public class ClassTreeBuilder {
-	
+
 	/**
 	 * Builds the class-dependcy-tree
 	 * @author Deconimus
 	 */
 	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep) {
+		
+		return getClassTree(mainClass, dependencyMap, keep, System.out);
+	}
+	
+	/**
+	 * Builds the class-dependcy-tree
+	 * @author Deconimus
+	 */
+	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep, PrintStream printStream) {
 		
 		Set<String> classTree = new HashSet<String>();
 		List<String> newlyAdded = new ArrayList<String>();
@@ -59,13 +68,13 @@ public class ClassTreeBuilder {
 				
 				if (deps == null) {
 					
-					if (!nullDeps) { 
+					if (!nullDeps) {
 						
-						System.out.println("External Dependencies:\n"); 
+						if (printStream != null) printStream.println("External Dependencies:\n"); 
 						nullDeps = true;
 					}
 					
-					System.out.println("]"+cl); 
+					if (printStream != null) printStream.println("]"+cl); 
 					continue;
 				}
 				

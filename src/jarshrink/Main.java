@@ -2,8 +2,11 @@ package jarshrink;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
+import visionCore.io.MultiOutputStream;
+import visionCore.io.MultiPrintStream;
 import visionCore.util.Files;
 import visionCore.util.Jars;
 import visionCore.util.Zipper;
@@ -54,9 +59,19 @@ public class Main {
 		File jarFile = new File(jar);
 		if (!jarFile.exists()) { System.out.println("Jar not found."); return; }
 		
+		
 		JarShrinker shrinker = new JarShrinker(new File(abspath));
 		shrinker.setPrintStatus(printStatus);
 		shrinker.setPrintDependencyList(printDependencyList);
+		
+		try {
+			
+			PrintStream logOut = new PrintStream(new FileOutputStream(abspath+File.separator+"log.txt"));
+			PrintStream multiOut = new MultiPrintStream(System.out, logOut);
+			
+			shrinker.setPrintStream(multiOut);
+		
+		} catch (FileNotFoundException e) { }
 		
 		shrinker.shrink(jarFile, new File(out), keep);
 		

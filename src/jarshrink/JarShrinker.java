@@ -1,6 +1,7 @@
 package jarshrink;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +24,8 @@ public class JarShrinker {
 	private String jdepsLocation;
 	
 	private boolean printStatus, printDependencyList;
+	
+	private PrintStream printStream;
 	
 	
 	public JarShrinker() {
@@ -51,6 +54,8 @@ public class JarShrinker {
 		
 		this.printStatus = false;
 		this.printDependencyList = false;
+		
+		this.setPrintStream(System.out);
 	}
 	
 	
@@ -77,44 +82,44 @@ public class JarShrinker {
 		
 		if ((mainClass == null || mainClass.trim().isEmpty()) && (keep == null || keep.length <= 0)) { 
 			
-			System.out.println("No Main-Class found and no packages to keep.");
+			printStream.println("No Main-Class found and no packages to keep.");
 			return;
 		}
 		
-		if (printStatus) System.out.println("Unpacking .jar");
+		if (printStatus && printStream != null) printStream.println("Unpacking .jar");
 		
 		Jars.extract(jarFile, unpacked);
 		
-		if (printStatus) System.out.println("Analyzing dependencies");
+		if (printStatus && printStream != null) printStream.println("Analyzing dependencies");
 		
 		Map<String, String[]> dependencyMap = Dependencies.buildDependencyMap(jdepsLocation, unpacked);
 		
-		if (printStatus) System.out.println("Constructing dependency-tree");
+		if (printStatus && printStream != null) printStream.println("Constructing dependency-tree");
 		
 		Set<String> classTree = ClassTreeBuilder.getClassTree(mainClass, dependencyMap, keep);
 		
-		if (printDependencyList) {
+		if (printDependencyList && printStream != null) {
 		
-			System.out.println("\nDependencies:\n");
+			printStream.println("\nDependencies:\n");
 			
 			for (String s : classTree) {
 				
-				System.out.println(s);
+				printStream.println(s);
 			}
-			System.out.println();
+			printStream.println();
 		}
 		
-		if (printStatus) System.out.println("Scraping redundant classes");
+		if (printStatus && printStream != null) printStream.println("Scraping redundant classes");
 		
 		Dependencies.removeRedundantClasses(unpacked, classTree);
 		
-		if (printStatus) System.out.println("Building new .jar");
+		if (printStatus && printStream != null) printStream.println("Building new .jar");
 		
 		Jars.create(unpacked, out);
 		
 		Files.deleteDir(unpacked);
 		
-		if (printStatus) System.out.println("Done");
+		if (printStatus && printStream != null) printStream.println("Done");
 	}
 	
 	
@@ -129,6 +134,9 @@ public class JarShrinker {
 
 	public boolean getPrintDependencyList() { return printDependencyList; }
 	public void setPrintDependencyList(boolean printDependencyList) { this.printDependencyList = printDependencyList; }
+	
+	public PrintStream getPrintStream() { return printStream; }
+	public void setPrintStream(PrintStream out) { this.printStream = out; }
 	
 	
 	private static String findAbspath() {
@@ -192,4 +200,5 @@ public class JarShrinker {
 		
 		return home.getAbsolutePath()+File.separator+"bin"+File.separator+"jdeps"+ext;
 	}
+
 }
