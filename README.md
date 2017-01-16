@@ -35,7 +35,7 @@ Argument          | Value | Effect
 `-k` or `-keep`   | package or class | Specifies a package or class that will be retained together with it's dependencies.<br>Can be called multiple times.
 `-s` or `-status` | | Print status information while processing.
 `-n` or `-nolist` | | Don't print a list of the remaining dependencies.
-`-t` or `-tmp` | directory | Specify JarShrinks tmp directory
+`-t` or `-tmp` | directory | Specifies JarShrinks tmp directory
     
 ### Example
 
