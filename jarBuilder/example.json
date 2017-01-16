@@ -1,6 +1,13 @@
 {
-	"builderinfo": {
-		"builderpath": "builder"
+	"jarBuilder": {
+		
+		"path": "C:/usr/bin/JarBuilder"
+	},
+	
+	"jarShrink": {
+		
+		"path": "C:/Program Files/jarShrink/jarShrink.jar",
+		"keep": ["net.java.games.input"]
 	},
 	
 	"jarName": "MangAddict.jar",

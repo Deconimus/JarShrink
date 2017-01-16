@@ -5,3 +5,4 @@ jarShrink.jar
 jarShrunken.jar
 tmp/
 log.txt
+jarBuilder/__pycache__/
