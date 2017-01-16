@@ -93,16 +93,18 @@ public class Dependencies {
 	
 	public static void removeRedundantClasses(File dir, Set<String> dependencies) {
 		
-		removeRedundantClasses(dir, dir, dependencies);
+		removeRedundantClasses(dir, dir, dependencies, "");
 	}
 	
-	public static void removeRedundantClasses(File dir, File root, Set<String> dependencies) {
+	public static void removeRedundantClasses(File dir, File root, Set<String> dependencies, String packageName) {
+		
+		if (packageName.equalsIgnoreCase("org.eclipse.jdt.internal")) { return; }
 		
 		for (File f : dir.listFiles()) {
 			
 			if (!f.isDirectory() && f.getName().toLowerCase().endsWith(".class")) {
 				
-				String className = f.getAbsolutePath().substring(root.getAbsolutePath().length()+1).replace(File.separator, ".");
+				String className = packageName+"."+f.getName();
 				className = className.substring(0, className.lastIndexOf('.')).trim();
 				
 				if (!dependencies.contains(className)) {
@@ -112,7 +114,7 @@ public class Dependencies {
 				
 			} else if (f.isDirectory()) {
 				
-				removeRedundantClasses(f, root, dependencies);
+				removeRedundantClasses(f, root, dependencies, packageName+"."+f.getName());
 				if (f.list().length <= 0) { f.delete(); }
 			}
 		}
