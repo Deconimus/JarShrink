@@ -1,0 +1,6 @@
+{
+	"jarName": "JarShrink.jar",
+	"main": "jarshrink.Main",
+	"sourceDirs": ["src"],
+	"packFiles": ["README.md", "LICENSE"]
+}

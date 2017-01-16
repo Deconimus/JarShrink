@@ -66,15 +66,19 @@ public class ClassTreeBuilder {
 				
 				String[] deps = dependencyMap.get(cl);
 				
-				if (deps == null && printExtDeps) {
+				if (deps == null) {
 					
-					if (!nullDeps) {
+					if (printExtDeps) {
 						
-						if (printStream != null) printStream.println("External Dependencies:\n"); 
-						nullDeps = true;
+						if (!nullDeps) {
+							
+							if (printStream != null) printStream.println("External Dependencies:\n"); 
+							nullDeps = true;
+						}
+						
+						if (printStream != null) printStream.println("]"+cl);
 					}
 					
-					if (printStream != null) printStream.println("]"+cl); 
 					continue;
 				}
 				

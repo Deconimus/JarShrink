@@ -1,77 +1,130 @@
 import os
+import json
+import importlib.util
 import shutil
 
 
 path = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 
 
-jarName = "jarShrink.jar"
-
-srcFilePath = path+"/src"
-
-mainClass = "jarshrink.Main"
-copyFiles = ["LICENSE", "README.md"]
-
-
-tmp = path+"/tmp"
-
-
-def build():
+def main():
 	
-	os.chdir(path)
-	
-	if os.path.exists(tmp):
+	if not os.path.exists(path+"/build.json"):
+		print("\""+path+"build.json\" not found.")
+		return
 		
-		shutil.rmtree(tmp)
-	
-	os.makedirs(tmp)
-	
-	for f in copyFiles:
-		shutil.copy(path+"/"+f, tmp+"/"+f)
-	
-	srcList = sourceListString(getSourceFiles(srcFilePath))
-	
-	os.system("javac "+srcList+" -sourcepath \""+srcFilePath+"/\" -d \""+tmp+"/\"")
-	
-	with open(path+"/MANIFEST.MF", "w+") as f:
+	data = None
 		
-		f.write("Manifest-Version: 1.0\nClass-Path: .\nMain-Class: "+mainClass+"\n")
+	with open(path+"/build.json") as f:
+		data = json.load(f)
+	
+	if data is None or len(data) <= 0:
+		print("build.json is corrupted.")
+		return
 		
-	os.chdir(tmp)
-	os.system("jar cmf \"../MANIFEST.MF\" \"../"+jarName+"\" *")
+	builderDir = None
 	
-	os.chdir(path)
-	
-	shutil.rmtree(tmp)
-	os.remove(path+"/MANIFEST.MF")
-	
-	
-def getSourceFiles(directory):
-	
-	files = []
-	
-	for dirName, subdirList, fileList in os.walk(directory):
+	if "jarBuilder" in data and "path" in data["jarBuilder"]:
 		
-		for f in fileList:
-			if (f.lower().endswith(".java")):
-				
-				files.append(dirName.replace("\\", "/")[len(path)+1:])
-				break
-				
-	return files
+		builderDir = os.path.abspath(data["builder"]["path"]).replace("\\", "/")
+	else:
+		builderDir = "jarBuilder"
 	
+	buildScriptFile = builderDir+"/jarBuilder.py"
 	
-def sourceListString(sourceFiles):
-	
-	str = ""
-	
-	for f in sourceFiles:
+	if not os.path.exists(buildScriptFile):
+		print("\""+buildScriptFile+"\" not found.")
+		return
 		
-		str = str + "\""+f+"/\"*.java "
+	buildScriptSpec = importlib.util.spec_from_file_location("jarBuilder", buildScriptFile)
+	buildScript = importlib.util.module_from_spec(buildScriptSpec)
+	buildScriptSpec.loader.exec_module(buildScript)
+	
+	
+	jarName = data["jarName"] if "jarName" in data else "app"
+	outDir = data["outDir"] if "outDir" in data else ""
+	mainClass = data["main"] if "main" in data else ""
+	srcDirs = data["sourceDirs"] if "sourceDirs" in data else None
+	imports = data["imports"] if "imports" in data else []
+	dynImports = data["dynImports"] if "dynImports" in data else []
+	dynImportsExt = data["dynImportsExt"] if "dynImportsExt" in data else []
+	extLibDir = data["extLibDir"] if "extLibDir" in data else "lib"
+	packFiles = data["packFiles"] if "packFiles" in data else []
+	
+	if srcDirs is None or len(srcDirs) <= 0:
+		srcDirs = [path+"/src"]
 		
-	return str.strip()
+	if not jarName.lower().endswith(".jar"):
+		jarName = jarName+".jar"
+	
+	completePaths(srcDirs)
+	completePaths(imports)
+	completePaths(dynImports)
+	completePaths(dynImportsExt)
+	extLibDir = completePath(extLibDir)
+	completePaths(packFiles)
+	outDir = completePath(outDir)
+	
+	
+	print("Building")
+	
+	buildScript.build(path, jarName, outDir, mainClass, srcDirs, imports, 
+					  dynImports, dynImportsExt, extLibDir, packFiles)
+	
+	
+	jarShrink = None
+	jarShrinkKeep = []
+	
+	if "jarShrink" in data and "path" in data["jarShrink"]:
+		
+		jarShrink = data["jarShrink"]["path"]
+		
+		if not os.path.exists(jarShrink):
+			print("\""+jarShrink+"\" not found.")
+			jarShrink = None
+		
+		if "keep" in data["jarShrink"]:
+			
+			jarShrinkKeep = data["jarShrink"]["keep"]
+		
+			
+	if not jarShrink is None:
+		
+		jp = "\""+outDir+"/"+jarName+"\""
+		
+		ks = ""
+		for k in jarShrinkKeep:
+			ks = ks+" -k \""+k+"\""
+			
+		jarShrinkTmp = path+"/jarShrink_tmp"
+		
+		print("Shrinking")
+		
+		os.system("java -jar \""+jarShrink+"\" "+jp+" -out "+jp+" -t \""+jarShrinkTmp+"\" -n "+ks)
+		
+		shutil.rmtree(jarShrinkTmp)
+		
+	print("Done")
+
+
+def completePaths(paths):
+	
+	for i in range(0, len(paths)):
+		
+		paths[i] = completePath(paths[i])
+			
+			
+def completePath(p):
+	
+	p = p.replace("\\", "/")
+	
+	if not p.startswith("/") and not (len(p) > 1 and p[1] == ":"):
+		
+		return path+"/"+p
+		
+	return p
 	
 	
 if __name__ == "__main__":
 	
-	build()
+	main()
