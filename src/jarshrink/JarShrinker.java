@@ -96,7 +96,7 @@ public class JarShrinker {
 		
 		if (printStatus && printStream != null) printStream.println("Constructing dependency-tree");
 		
-		Set<String> classTree = ClassTreeBuilder.getClassTree(mainClass, dependencyMap, keep);
+		Set<String> classTree = ClassTreeBuilder.getClassTree(mainClass, dependencyMap, keep, printDependencyList, printStream);
 		
 		if (printDependencyList && printStream != null) {
 		

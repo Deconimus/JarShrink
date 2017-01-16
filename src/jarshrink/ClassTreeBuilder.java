@@ -19,16 +19,16 @@ public class ClassTreeBuilder {
 	 * Builds the class-dependcy-tree
 	 * @author Deconimus
 	 */
-	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep) {
+	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep, boolean printExtDeps) {
 		
-		return getClassTree(mainClass, dependencyMap, keep, System.out);
+		return getClassTree(mainClass, dependencyMap, keep, printExtDeps, System.out);
 	}
 	
 	/**
 	 * Builds the class-dependcy-tree
 	 * @author Deconimus
 	 */
-	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep, PrintStream printStream) {
+	public static Set<String> getClassTree(String mainClass, Map<String, String[]> dependencyMap, String[] keep, boolean printExtDeps, PrintStream printStream) {
 		
 		Set<String> classTree = new HashSet<String>();
 		List<String> newlyAdded = new ArrayList<String>();
@@ -66,7 +66,7 @@ public class ClassTreeBuilder {
 				
 				String[] deps = dependencyMap.get(cl);
 				
-				if (deps == null) {
+				if (deps == null && printExtDeps) {
 					
 					if (!nullDeps) {
 						
