@@ -104,7 +104,7 @@ public class Dependencies {
 			
 			if (!f.isDirectory() && f.getName().toLowerCase().endsWith(".class")) {
 				
-				String className = packageName+"."+f.getName();
+				String className = packageName+f.getName();
 				className = className.substring(0, className.lastIndexOf('.')).trim();
 				
 				if (!dependencies.contains(className)) {
@@ -114,7 +114,7 @@ public class Dependencies {
 				
 			} else if (f.isDirectory()) {
 				
-				removeRedundantClasses(f, root, dependencies, packageName+"."+f.getName());
+				removeRedundantClasses(f, root, dependencies, packageName+f.getName()+".");
 				if (f.list().length <= 0) { f.delete(); }
 			}
 		}

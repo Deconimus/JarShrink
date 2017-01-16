@@ -30,7 +30,7 @@ public class Main {
 	public static String abspath, javaHome;
 	
 	
-	public static String jar, out, keep[];
+	public static String jar, out, keep[], tmpdir;
 	
 	public static boolean printStatus, printDependencyList;
 	
@@ -60,7 +60,7 @@ public class Main {
 		if (!jarFile.exists()) { System.out.println("Jar not found."); return; }
 		
 		
-		JarShrinker shrinker = new JarShrinker(new File(abspath));
+		JarShrinker shrinker = new JarShrinker(new File(tmpdir));
 		shrinker.setPrintStatus(printStatus);
 		shrinker.setPrintDependencyList(printDependencyList);
 		
@@ -115,6 +115,11 @@ public class Main {
 					
 					keep.add(nextArg);
 					i++;
+					
+				} else if (arg.equals("-t") || arg.equals("-tmp")) {
+					
+					tmpdir = nextArg;
+					i++;
 				}
 				
 			}
@@ -123,6 +128,11 @@ public class Main {
 		if (out == null || out.isEmpty()) {
 			
 			out = jar.substring(0, Math.max(0, jar.lastIndexOf('.')))+"_shrunken.jar";
+		}
+		
+		if (tmpdir == null || tmpdir.isEmpty()) {
+			
+			tmpdir = abspath;
 		}
 		
 		Main.keep = keep.toArray(new String[keep.size()]);
