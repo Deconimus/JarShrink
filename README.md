@@ -33,9 +33,9 @@ Argument          | Value | Effect
 ----------------- | ----- | ------
 `-o` or `-out`    | directory | Specifies the output-file for the newly created jar.
 `-k` or `-keep`   | package or class | Specifies a package or class that will be retained together with it's dependencies.<br>Can be called multiple times.
-`-t` or `-tmp` | | Specify JarShrinks tmp directory
 `-s` or `-status` | | Print status information while processing.
 `-n` or `-nolist` | | Don't print a list of the remaining dependencies.
+`-t` or `-tmp` | directory | Specify JarShrinks tmp directory
     
 ### Example
 
