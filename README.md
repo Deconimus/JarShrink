@@ -79,14 +79,15 @@ _Note that any library will still work if imported as a jar file._
 
 Library | Compatibility | Extra arguments (if needed)
 --------|:-------------:|----------------------------
-LWJGL | ✓ | 
-JInput | (✓) | `-keep net.java.games.input`
-Guava | ✓ | 
 Dom4j | ✓ | 
-Slick2D | ✓ | 
-jbzip2 | ✓ | 
+Guava | ✓ | 
 HTMLUnit | X | 
-
+jbzip2 | ✓ | 
+JInput | (✓) | `-keep net.java.games.input`
+jorbis | ✓ | 
+libjpeg-turbo | ✓ | 
+LWJGL | ✓ | 
+Slick2D | ✓ | 
 
 ## A few notes
 
