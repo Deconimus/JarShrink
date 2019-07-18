@@ -1,6 +1,7 @@
 package jarshrink;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Set;
@@ -68,8 +69,9 @@ public class JarShrinker {
 	 * @param keep		Keep the specified packages or classes and their dependencies.
 	 * 
 	 * @author Deconimus
+	 * @throws IOException 
 	 */
-	public void shrink(File jarFile, File out, String... keep) {
+	public void shrink(File jarFile, File out, String... keep) throws IOException {
 		
 		String jarFileName = jarFile.getName();
 		int ind = jarFileName.lastIndexOf('.');
