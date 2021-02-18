@@ -1,0 +1,11 @@
+{
+    "imports": [
+        "D:/Workspace/Git/JarShrink/.jarMakeCache/bin"
+    ],
+    "dynImports": [],
+    "dynImportsExt": [],
+    "packFiles": [
+        "D:/Workspace/Git/JarShrink/README.md",
+        "D:/Workspace/Git/JarShrink/LICENSE"
+    ]
+}
