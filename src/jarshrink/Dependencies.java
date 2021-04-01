@@ -209,6 +209,8 @@ public class Dependencies {
             public void onClassEnd(JDepsClassOutputParser source, String className) {
                 if (!dependencies.isEmpty()) {
                     map.put(className, dependencies.toArray(new String[dependencies.size()]));
+                } else {
+                    map.put(className, new String[0]);
                 }
             }
 
