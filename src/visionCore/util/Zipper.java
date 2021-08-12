@@ -144,7 +144,9 @@ public class Zipper {
 				//if (isJar && !f.getParentFile().exists()) { f.getParentFile().mkdirs(); }
 				
 				if (!ze.isDirectory()) {
-					
+					if(!f.getParentFile().exists()) {
+                        			f.getParentFile().mkdirs();
+                    			}
 					FileOutputStream out = new FileOutputStream(f);
 					InputStream in = zf.getInputStream(ze);
 					
